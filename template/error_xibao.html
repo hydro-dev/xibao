@@ -1,0 +1,71 @@
+<style>
+  .main { padding: 0 !important; }
+  body { overflow: hidden !important; }
+</style>
+<div style="
+  width: 100vw; height: 100vh;
+  background-image: url('/xibao.png');
+  background-repeat: no-repeat;
+  background-size: auto auto;
+  background-position: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;"
+>
+  <svg width="100%" height="80" viewBox="0 0 800 80" style="margin-bottom: 10px;">
+    <defs>
+      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff0000" stop-opacity="1" />
+        <stop offset="50%" stop-color="#ffff00" stop-opacity="1" />
+        <stop offset="100%" stop-color="#0000ff" stop-opacity="1" />
+      </linearGradient>
+    </defs>
+    <text fill="url(#grad1)" stroke="black" stroke-width="0" x="400" y="60" font-size="50" font-weight="bold" text-anchor="middle">
+      发生了一个错误！
+    </text>
+  </svg>
+  <svg width="100%" height="160" viewBox="0 0 1200 160">
+    <defs>
+      <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff0000" stop-opacity="1" />
+        <stop offset="50%" stop-color="#ffff00" stop-opacity="1" />
+        <stop offset="100%" stop-color="#0000ff" stop-opacity="1" />
+      </linearGradient>
+    </defs>
+    <text fill="url(#grad2)" stroke="black" stroke-width="0" x="600" y="50" font-size="40" font-weight="bold" text-anchor="middle">
+      <tspan x="600" dy="0">这大概率是因为您传入了无效的参数，</tspan>
+      <tspan x="600" dy="1.2em">没有权限进行操作，</tspan>
+      <tspan x="600" dy="1.2em">或是访问了不存在的地址。</tspan>
+    </text>
+  </svg>
+  <div style="padding: 20px; max-width: 80%;" class="typo">
+    <p>{{ _(error.message).formatFromArray(error.params) }}</p>
+    <p>{{ _('Technical Information') }}:</p>
+    <p>{{ _('Type') }}: {{ error.name }}</p>
+    <p>{{ _('Arguments') }}:
+      <ol>
+      {%- for param in error.params -%}
+        {% if instanceof(param, UserFacingError) %}
+          <li>{{ _(param.message).formatFromArray(param.params)}}</li>
+        {% else %}
+          <li>{{ param }}</li>
+        {% endif %}
+      {%- endfor -%}
+      </ol>
+    </p>
+  </div>
+</div>
+<script>
+function animateGradient(gradId) {
+  const gradient = document.getElementById(gradId);
+  const stops = gradient.querySelectorAll('stop');
+  let hue = 0;
+  setInterval(() => {
+    hue = (hue + 2) % 360;
+    stops[0].setAttribute('stop-color', `hsl(${hue}, 100%, 50%)`);
+    stops[1].setAttribute('stop-color', `hsl(${(hue + 120) % 360}, 100%, 50%)`);
+    stops[2].setAttribute('stop-color', `hsl(${(hue + 240) % 360}, 100%, 50%)`);
+  }, 50);
+}
+animateGradient('grad1');
+animateGradient('grad2');
+</script>
